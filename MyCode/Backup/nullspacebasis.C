@@ -6,8 +6,7 @@
 #include <linbox/linbox-config.h>
 #include "linbox/algorithms/gauss.h"
 #include <givaro/zring.h>
-//#include <linbox/integer.h>
-#include <linbox/solutions/rank.h>
+#include <linbox/integer.h>
 
 using namespace LinBox;
 
@@ -48,43 +47,73 @@ std::vector<int> SplitString (const std::string& input_string)
 int main (int argc, char **argv)
 {
     
-    // We expect a matrix a matrix file in sms-format as input
-	//if ( argc !=  1 ) {
-	//	std::cerr << "Usage to get a random null space basis over Z:  <matrix-file-in-SMS-format>" << std::endl;
-	//	return -1;
-	//}
+    // We expect that the entries of the matrix are provided as individual arguments - one by one.
+    // "2 2 M" "1 1 1" "1 2 1" "2 1 2" "0 0 0" means that we are dealing with a 2x2 matrix.
+    // Its entriy (1,1) is 1, entry (1,2) is 1, entry (2,1) is 2 and all others vanish.
     
     // (0) Introduction
     std::cerr << "" << std::endl;
     std::cerr << "This is Linbox..." << std::endl;
     
     // (1) Initialize the field of integers
-    //typedef Givaro::QField<Givaro::Rational> Field;
-    //Field F;
-    typedef Givaro::ZRing<Integer> Field;
+    typedef Givaro::QField<Givaro::Rational> Field;
     Field F;
+    //typedef Givaro::ZRing<Integer> Field;
+    //Field F;
     
-    // (2) Read matrix
-	std::ifstream input (argv[1]);
-	if (!input) { std::cerr << "Error opening matrix file " << argv[1] << std::endl; return -1; }
-	SparseMatrix<Field, SparseMatrixFormat::SparseSeq > B (F);
-	B.read (input);
+    // (2) Read first argument, extract dimensions of the sparse matrix and initialize it
+    std::vector<int> split;
+    split = SplitString( argv[ 1 ] );
+    if ( !( split[ 0 ] > 0 && split[ 1 ] > 0 ) ){
+        std::cerr << "Error -- specified dimensions of matrix must be positive, but obtained " << argv[1] << std::endl; 
+        return -1; 
+    }
+    SparseMatrix<Field, SparseMatrixFormat::SparseSeq > B (F,split[0],split[1]);
+    
+    // (3) Fill sparse matrix with entries provided as input
+    for (int i = 2; i < argc - 1; i++) {
+        split = SplitString( argv[ i ] );
+        Field::Element v;
+        F.init(v, split[ 2 ] );
+        B.setEntry( split[ 0 ] - 1, split[ 1 ] - 1, v);
+    }
     std::cerr << "(*) Matrix read..." << std::endl;
     
-    // (3) Determine the rank of the kernel
-    //size_t r;
-    //rank (r, B);
-    //std::cerr << "(*) Kernel has dimension " << B.coldim() - r << std::endl;
-    
-    // (4) Compute kernel as dense matrix
-    // Unfortunately, this will allocate quite a bit of memory. We use the information on the rank to reduce the consumed memory as much as possible
-    DenseMatrix<Field> NullSpace(F,B.coldim(),20973);
+    // (4) Determine the rank of the kernel
+    //typename Field::Element Det;
+    //size_t Rank;
+    //size_t Ni(B.rowdim()),Nj(B.coldim());
+    //Permutation<Field> P(F,(int)Nj);
+    //Permutation<Field> P(F);
     GaussDomain<Field> GD(F);
+    //GD.InPlaceLinearPivoting(Rank, Det, B, P, Ni, Nj );
+    
+    /*for(size_t i=0; i< Ni; ++i) {
+        if (B[i].size() == 0) {
+            size_t j(i);
+            if (nextnonzero(j,Ni,B)) {
+                B[i] = B[j];
+                B[j].resize(0);
+            }
+            else {
+                break;
+            }
+        }
+    }*/
+    //std::cerr << B << std::endl;
+    
+    //size_t nullity = B.coldim()-Rank;
+    //std::cerr << "(*) Kernel has dimension " << nullity << std::endl;
+    
+    // (5) Compute kernel as dense matrix - unfortunately, this will allocate quite a bit of memory...
+    //DenseMatrix<Field> NullSpace(F,B.coldim(),B.coldim());
+    DenseMatrix<Field> NullSpace(F,B.coldim(),B.coldim());
     GD.nullspacebasisin(NullSpace, B );
-    //GD.nullspacebasis(NullSpace, B );
+    //GD.nullspacebasisin(NullSpace, Rank, B );
+    //GD.nullspacebasisin(NullSpace, Rank, B, P);
     std::cerr << "(*) Exact (dense) kernel computed..." << std::endl;
     
-    // (5) Process this kernel to turn it (a) into a sparse matrix and (b) see how many columns are actually non-trivial
+    // (6) Process this kernel to turn it (a) into a sparse matrix and (b) see how many columns are actually non-trivial
     Field::Element zero;
     F.init(zero, 0 );
     std::string data_string;
@@ -93,6 +122,7 @@ int main (int argc, char **argv)
         for (int j = 0; (unsigned)j < NullSpace.coldim(); j++){
             // Check if the entry is non-zero
             if (NullSpace.getEntry( i, j ) != zero ){
+                // add entry to output string
                 data_string.append("[");
                 data_string.append(std::to_string(i+1));
                 data_string.append(",");
@@ -107,6 +137,7 @@ int main (int argc, char **argv)
     data_string.pop_back();
     data_string.append("]");
     std::cerr << "(*) Converted into sparse format..." << std::endl;
+    std::cerr << "(*) Stripped of empty columns..." << std::endl;
     
     // (6) Form output_string
     std::string output_string;
@@ -117,10 +148,11 @@ int main (int argc, char **argv)
     output_string.append(",");
     output_string.append(data_string);
     output_string.append("];");
-    std::cout << output_string << std::endl;
-    std::cerr << "(*) Output string created and returned..." << std::endl;
     
-    // (7) Signal success and terminate
+    // (7) Output the result to gap
+    std::cout << output_string << std::endl;
+    
+    // and signal success
     std::cerr << "(*) Finished" << std::endl;
     std::cerr << "" << std::endl;
     return 0;

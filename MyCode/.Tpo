@@ -1,4 +1,4 @@
-nullspacebasis.o: nullspacebasis.C /usr/include/stdc-predef.h \
+MinimalExample.o: MinimalExample.C /usr/include/stdc-predef.h \
  /usr/include/c++/7/iostream \
  /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
@@ -134,13 +134,8 @@ nullspacebasis.o: nullspacebasis.C /usr/include/stdc-predef.h \
  /usr/include/c++/7/bits/locale_facets.tcc \
  /usr/include/c++/7/bits/basic_ios.tcc \
  /usr/include/c++/7/bits/ostream.tcc /usr/include/c++/7/istream \
- /usr/include/c++/7/bits/istream.tcc /usr/include/c++/7/sstream \
- /usr/include/c++/7/bits/sstream.tcc /usr/include/c++/7/vector \
- /usr/include/c++/7/bits/stl_construct.h \
- /usr/include/c++/7/bits/stl_uninitialized.h \
- /usr/include/c++/7/bits/stl_vector.h \
- /usr/include/c++/7/bits/stl_bvector.h /usr/include/c++/7/bits/vector.tcc \
- ../linbox/matrix/dense-matrix.h ../linbox/linbox-config.h \
+ /usr/include/c++/7/bits/istream.tcc ../linbox/matrix/dense-matrix.h \
+ ../linbox/linbox-config.h \
  /home/i/HDD/Computer/Mathematics_software/fflas-ffpack/build/include/fflas-ffpack/fflas-ffpack-config.h \
  /home/i/HDD/Computer/Mathematics_software/fflas-ffpack/build/include/fflas-ffpack/config.h \
  /home/i/HDD/Computer/Mathematics_software/fflas-ffpack/build/include/fflas-ffpack/fflas-ffpack-thresholds.h \
@@ -158,8 +153,12 @@ nullspacebasis.o: nullspacebasis.C /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
  /usr/include/x86_64-linux-gnu/bits/mathinline.h \
- ../linbox/vector/vector-traits.h /usr/include/c++/7/list \
- /usr/include/c++/7/bits/stl_list.h \
+ ../linbox/vector/vector-traits.h /usr/include/c++/7/vector \
+ /usr/include/c++/7/bits/stl_construct.h \
+ /usr/include/c++/7/bits/stl_uninitialized.h \
+ /usr/include/c++/7/bits/stl_vector.h \
+ /usr/include/c++/7/bits/stl_bvector.h /usr/include/c++/7/bits/vector.tcc \
+ /usr/include/c++/7/list /usr/include/c++/7/bits/stl_list.h \
  /usr/include/c++/7/bits/allocated_ptr.h \
  /usr/include/c++/7/ext/aligned_buffer.h /usr/include/c++/7/bits/list.tcc \
  /usr/include/c++/7/deque /usr/include/c++/7/bits/stl_deque.h \
@@ -179,7 +178,8 @@ nullspacebasis.o: nullspacebasis.C /usr/include/stdc-predef.h \
  /usr/include/strings.h \
  /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
  /usr/include/x86_64-linux-gnu/bits/string_fortified.h \
- ../linbox/util/debug.h \
+ ../linbox/util/debug.h /usr/include/c++/7/sstream \
+ /usr/include/c++/7/bits/sstream.tcc \
  /home/i/HDD/Computer/Mathematics_software/givaro/build/include/givaro/givprint.h \
  /usr/include/c++/7/iterator /usr/include/c++/7/bits/stream_iterator.h \
  /usr/include/c++/7/set /usr/include/c++/7/bits/stl_set.h \
@@ -1095,22 +1095,6 @@ nullspacebasis.o: nullspacebasis.C /usr/include/stdc-predef.h \
 
 /usr/include/c++/7/bits/istream.tcc:
 
-/usr/include/c++/7/sstream:
-
-/usr/include/c++/7/bits/sstream.tcc:
-
-/usr/include/c++/7/vector:
-
-/usr/include/c++/7/bits/stl_construct.h:
-
-/usr/include/c++/7/bits/stl_uninitialized.h:
-
-/usr/include/c++/7/bits/stl_vector.h:
-
-/usr/include/c++/7/bits/stl_bvector.h:
-
-/usr/include/c++/7/bits/vector.tcc:
-
 ../linbox/matrix/dense-matrix.h:
 
 ../linbox/linbox-config.h:
@@ -1158,6 +1142,18 @@ nullspacebasis.o: nullspacebasis.C /usr/include/stdc-predef.h \
 /usr/include/x86_64-linux-gnu/bits/mathinline.h:
 
 ../linbox/vector/vector-traits.h:
+
+/usr/include/c++/7/vector:
+
+/usr/include/c++/7/bits/stl_construct.h:
+
+/usr/include/c++/7/bits/stl_uninitialized.h:
+
+/usr/include/c++/7/bits/stl_vector.h:
+
+/usr/include/c++/7/bits/stl_bvector.h:
+
+/usr/include/c++/7/bits/vector.tcc:
 
 /usr/include/c++/7/list:
 
@@ -1228,6 +1224,10 @@ nullspacebasis.o: nullspacebasis.C /usr/include/stdc-predef.h \
 /usr/include/x86_64-linux-gnu/bits/string_fortified.h:
 
 ../linbox/util/debug.h:
+
+/usr/include/c++/7/sstream:
+
+/usr/include/c++/7/bits/sstream.tcc:
 
 /home/i/HDD/Computer/Mathematics_software/givaro/build/include/givaro/givprint.h:
 
