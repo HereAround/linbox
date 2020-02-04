@@ -9,5 +9,9 @@ echo "(*) Created (executable) nullspacebasis..."
 
 g++ -pg -ggdb -march=native -mfma -o nullspacebasis nullspacebasis.o -fopenmp  -L/home/i/HDD/Computer/Mathematics_software/givaro/build/lib -lblas /home/i/HDD/Computer/Mathematics_software/givaro/build/lib/libgivaro.so -lgmp -lgmpxx ../linbox/.libs/liblinbox.so -fopenmp -Wl,-rpath -Wl,/home/i/HDD/Computer/Mathematics_software/givaro/build/lib -Wl,-rpath -Wl,/home/i/HDD/Computer/Mathematics_software/linbox/build/lib
 
+echo "(*) Remove .Tpo file..."
+rm -f .Tpo
+
 echo "(*) Done"
 echo ""
+
