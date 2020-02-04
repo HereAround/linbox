@@ -6,8 +6,16 @@
 #include <linbox/linbox-config.h>
 #include "linbox/algorithms/gauss.h"
 #include <givaro/zring.h>
+#include <givaro/givrational.h>
 //#include <linbox/integer.h>
 #include <linbox/solutions/rank.h>
+
+//#include <utility>
+//#include <linbox/matrix/sparse-matrix.h>
+//#include <linbox/blackbox/zero-one.h>
+//#include <linbox/solutions/rank.h>
+//#include <linbox/util/matrix-stream.h>
+
 
 using namespace LinBox;
 
@@ -71,14 +79,19 @@ int main (int argc, char **argv)
 	B.read (input);
     std::cerr << "(*) Matrix read..." << std::endl;
     
+    std::cerr << "(*) Check content of line 6256..." << std::endl;
+    std::cerr << "Matrix values = " << B[(long unsigned int)6256] << std::endl;
+    std::cerr << "" <<std::endl;
+    
     // (3) Determine the rank of the kernel
-    //size_t r;
-    //rank (r, B);
-    //std::cerr << "(*) Kernel has dimension " << B.coldim() - r << std::endl;
+    size_t r;
+    rank (r, B );
+    //rank (r, B, Method::SparseElimination() );
+    std::cerr << "(*) Kernel has dimension " << B.coldim() - r << std::endl;
     
     // (4) Compute kernel as dense matrix
     // Unfortunately, this will allocate quite a bit of memory. We use the information on the rank to reduce the consumed memory as much as possible
-    DenseMatrix<Field> NullSpace(F,B.coldim(),20973);
+    DenseMatrix<Field> NullSpace(F,B.coldim(),B.coldim() - r);
     GaussDomain<Field> GD(F);
     GD.nullspacebasisin(NullSpace, B );
     //GD.nullspacebasis(NullSpace, B );
