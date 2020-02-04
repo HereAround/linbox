@@ -98,21 +98,23 @@ namespace LinBox
 	template <class _Matrix, class Block> inline Block&
 	GaussDomain<_Field>::nullspacebasisin(Block& x, _Matrix& A)  const
 	{
-		typename Field::Element Det;
-		size_t Rank;
-		size_t Ni(A.rowdim()),Nj(A.coldim());
+		
+        typename Field::Element Det;
+		long unsigned int Rank;
+		long unsigned int Ni(A.rowdim()),Nj(A.coldim());
 
-		Permutation<Field> P(field(),(int)Nj);
+		Permutation<Field> P(field(),(long unsigned int)Nj);
 
 		// A.write( std::cerr << "A:=", Tag::FileFormat::Maple ) << ';' << std::endl;
 		this->InPlaceLinearPivoting(Rank, Det, A, P, Ni, Nj );
 
+        std::cerr << "And now here" << std::endl;
 		// P.write( std::cerr << "P:=", Tag::FileFormat::Maple ) << ';' << std::endl;
 		// A.write( std::cerr << "Ua:=", Tag::FileFormat::Maple ) << ';' << std::endl;
 
-		for(size_t i=0; i< Ni; ++i) {
+		for(long unsigned int i=0; i< Ni; ++i) {
 			if (A[i].size() == 0) {
-				size_t j(i);
+				long unsigned int j(i);
 				if (nextnonzero(j,Ni,A)) {
 					A[i] = A[j];
 					A[j].resize(0);

@@ -628,15 +628,15 @@ namespace LinBox
 
     template <class _Field>
     template <class _Matrix, class Perm> inline size_t&
-    GaussDomain<_Field>::InPlaceLinearPivoting (size_t &Rank,
+    GaussDomain<_Field>::InPlaceLinearPivoting (long unsigned int &Rank,
                             Element        &determinant,
                             _Matrix         &LigneA,
                             Perm           &P,
-                            size_t   Ni,
-                            size_t   Nj) const
+                            long unsigned int Ni,
+                            long unsigned int Nj) const
     {
         typedef typename _Matrix::Row        Vector;
-
+//std::cerr << "now in InPlaceLinearPivoting" << std::endl;
         // Requirements : LigneA is an array of sparse rows
         // In place (LigneA is modified)
         // With reordering (D is a density type. Density is allocated here)
@@ -652,12 +652,12 @@ namespace LinBox
 
         field().assign(determinant,field().one);
         // allocation of the column density
-        std::vector<size_t> col_density (Nj);
+        std::vector<long unsigned int> col_density (Nj);
 
         // assignment of LigneA with the domain object
-        for (size_t jj = 0; jj < Ni; ++jj)
-            for (size_t k = 0; k < LigneA[(size_t)jj].size (); k++)
-                ++col_density[LigneA[(size_t)jj][k].first];
+        for (long unsigned int jj = 0; jj < Ni; ++jj)
+            for (long unsigned int k = 0; k < LigneA[(long unsigned int)jj].size (); k++)
+                ++col_density[LigneA[(long unsigned int)jj][k].first];
 
         const long last = (long)Ni - 1;
         long c;
@@ -670,17 +670,18 @@ namespace LinBox
         long sstep = 1000;
 #endif
         // Elimination steps with reordering
+//std::cerr << "start loop until " << last << " now" << std::endl;
         for (long k = 0; k < last; ++k) {
-            long p = k, s =(long) LigneA[(size_t)k].size ();
-
+            long p = k, s =(long) LigneA[(long unsigned int)k].size ();
+std::cerr << "start loop with " << k << " (until " << last << ")" << std::endl;
 #ifdef __LINBOX_FILLIN__
             if ( ! (k % 100) )
             {
-                size_t l;
+                long unsigned int l;
                 long sl;
                 commentator().progress (k);
                 for (sl = 0, l = 0; l < Ni; ++l)
-                    sl +=(long) LigneA[(size_t)l].size ();
+                    sl +=(long) LigneA[(long unsigned int)l].size ();
 
                 commentator().report (Commentator::LEVEL_IMPORTANT, PARTIAL_RESULT)
                 << "Fillin (" << Rank << "/" << Ni << ") = "
@@ -696,66 +697,73 @@ namespace LinBox
                 commentator().progress (k);
             }
 #endif
-
-
+//std::cerr << "halfway through the loop" << std::endl;
             if (s) {
-                size_t l;
+                long unsigned int l;
                 // Row permutation for the sparsest row
-                for (l = (size_t)k + 1; l < (size_t)Ni; ++l) {
+                for (l = (long unsigned int)k + 1; l < (long unsigned int)Ni; ++l) {
                 long sl;
-                    if (((sl =(long) LigneA[(size_t)l].size ()) < s) && (sl)) {
+                    if (((sl =(long) LigneA[(long unsigned int)l].size ()) < s) && (sl)) {
                         s = sl;
                         p = (long)l;
                     }
                     }
-
+//std::cerr << "s loop first step" << std::endl;
                 if (p != k) {
                     field().negin(determinant);
-                    Vector vtm = LigneA[(size_t)k];
-                    LigneA[(size_t)k] = LigneA[(size_t)p];
-                    LigneA[(size_t)p] = vtm;
+                    Vector vtm = LigneA[(long unsigned int)k];
+                    LigneA[(long unsigned int)k] = LigneA[(long unsigned int)p];
+                    LigneA[(long unsigned int)p] = vtm;
                 }
 
                 //                     LigneA.write(std::cerr << "BEF, k:" << k << ", Rank:" << Rank << ", c:" << c)<<std::endl;
 
-                SparseFindPivot (LigneA[(size_t)k], Rank, c, col_density, determinant);
+                SparseFindPivot (LigneA[(long unsigned int)k], Rank, c, col_density, determinant);
                 //                     LigneA.write(std::cerr << "PIV, k:" << k << ", Rank:" << Rank << ", c:" << c)<<std::endl;
+//std::cerr << "s loop second step" << std::endl;
                 if (c != -1) {
-                    if ( c != (static_cast<long>(Rank)-1) )
-                        P.permute(Rank-1,(size_t)c);
-                    for (long ll=0; ll < k ; ++ll)
-                        permute( LigneA[(size_t)ll], Rank, c);
-
-                    for (l = (size_t)k + 1; l < (size_t)Ni; ++l)
-                        eliminate (LigneA[(size_t)l], LigneA[(size_t)k], Rank, c, col_density);
+                    if ( c != (static_cast<long>(Rank)-1) ){
+                        P.permute(Rank-1,(long unsigned int)c);
+                    }
+//std::cerr << "c-case -- loop 1" << std::endl;
+                    for (long ll=0; ll < k ; ++ll){
+                        permute( LigneA[(long unsigned int)ll], Rank, c);
+                    }
+//std::cerr << "c-case -- loop 2" << std::endl;
+                    for (l = (long unsigned int)k + 1; l < (long unsigned int)Ni; ++l){
+                        if ( k == 6256 && l == 22930 ) {
+                        std::cerr << "eliminate l =" << l << std::endl;
+                        }
+                        eliminate (LigneA[(long unsigned int)l], LigneA[(long unsigned int)k], Rank, c, col_density);
+                    }
                 }
 
                 //                     LigneA.write(std::cerr << "AFT " )<<std::endl;
 #ifdef __LINBOX_COUNT__
-                nbelem += LigneA[(size_t)k].size ();
+                nbelem += LigneA[(long unsigned int)k].size ();
 #endif
             }
 
         }//for k
-
-        SparseFindPivot (LigneA[(size_t)last], Rank, c, determinant);
+std::cerr << "after loop, i.e. halfway through InPlaceLinearPivoting" << std::endl;
+        SparseFindPivot (LigneA[(long unsigned int)last], Rank, c, determinant);
         if ( (c != -1) && (c != (static_cast<long>(Rank)-1) ) ) {
-            P.permute(Rank-1,(size_t)c);
+            P.permute(Rank-1,(long unsigned int)c);
             for (long ll=0; ll < last ; ++ll)
-                permute( LigneA[(size_t)ll], Rank, c);
+                permute( LigneA[(long unsigned int)ll], Rank, c);
         }
 
 
 #ifdef __LINBOX_COUNT__
-        nbelem += LigneA[(size_t)last].size ();
+        nbelem += LigneA[(long unsigned int)last].size ();
         commentator().report (Commentator::LEVEL_NORMAL, PARTIAL_RESULT)
         << "Left elements : " << nbelem << std::endl;
 #endif
 
 #ifdef __LINBOX_FILLIN__
         long sl(0);
-        for (size_t l=0; l < Ni; ++l)
-            sl +=(long) LigneA[(size_t)l].size ();
+        for (long unsigned int l=0; l < Ni; ++l)
+            sl +=(long) LigneA[(long unsigned int)l].size ();
 
         commentator().report (Commentator::LEVEL_IMPORTANT, PARTIAL_RESULT)
         << "Fillin (" << Rank << "/" << Ni << ") = " << sl
