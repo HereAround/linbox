@@ -47,7 +47,7 @@ namespace LinBox
 		//             std::cerr << '(' << refs->first << ';' << refs->second << ')';
 		//         std::cerr << "]" << std::endl;
 		typedef typename Vector::value_type E;
-
+        //std::cerr << "in sparse find pivot" << std::endl;
 		long nj = (long) lignepivot.size ();
 
 

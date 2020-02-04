@@ -125,7 +125,6 @@ namespace LinBox
 					const long &indpermut,
 					D                   &columns) const
 	{
-//std::cerr << "in eliminate" << std::endl;
 		typedef typename Vector::value_type E;
 		typedef typename E::first_type E1;
 
@@ -169,57 +168,10 @@ namespace LinBox
 							--columns[(size_t)tmp.first];
 							++columns[(size_t)k];
 							tmp.first = (E1)k;
-
-        if ( static_cast<long>(lignecourante.size()) > 0 && static_cast<long>(lignecourante[ 0 ].first) == 33658 && static_cast<long>(lignecourante[ 1 ].first) == 35495 ){
-                std::cerr << "In eliminate (line 175 of gauss-elim.inl" << std::endl;
-                std::cerr << j_head << std::endl;
-                std::cerr << nj << std::endl;
-                std::cerr << tmp << std::endl;
-                std::cerr << "Value at position 1" << std::endl;
-                std::cerr << lignecourante[1] << std::endl;
-                std::cerr << "Value at position 0" << std::endl;
-                std::cerr << lignecourante[0] << std::endl;
-                std::cerr << "Tmp" << std::endl;
-                std::cerr << tmp << std::endl;
-                //std::cerr << "Trying assignment now..." << std::endl;
-                //lignecourante[1] = lignecourante[0];
-                //std::cerr << "Sucessful 1..." << std::endl;
-                //lignecourante[0] = tmp;
-                //std::cerr << "Sucessful 2..." << std::endl;
-                std::cerr << "j_head has the value " << j_head << std::endl;
-                std::cerr << "Try conversion into long..." << std::endl;
-                long myLong = (long) j_head;
-                std::cerr << "Obtained " << myLong << std::endl;
-                std::cerr << "Try loop simple loop" << std::endl;
-                for (long l = (long)j_head; l > 0; --l){
-                    std::cerr << l << std::endl;
-                }
-                std::cerr << "Finished loop - now try one with assignments" << std::endl;
-                for (long l = (long)j_head; l > 0; --l){
-                    std::cerr << l << std::endl;
-                    std::cerr << "Before assignment" << std::endl;
-                    lignecourante[(size_t)l] = lignecourante[(size_t)l-1];
-                    std::cerr << "After assignment" << std::endl;
-                }
-                std::cerr << "After loop" << std::endl;
-                lignecourante[0] = tmp;
-                std::cerr << "After final assignment" << std::endl;
-        }
-        else{
 							for (long l = (long)j_head; l > 0; --l){
 								lignecourante[(size_t)l] = lignecourante[(size_t)l-1];
-                            }
-                            lignecourante[0] = tmp;
-        }
-        
-        if ( static_cast<long>(lignecourante.size()) > 0 ){
-            if ( static_cast<long>(lignecourante[ 0 ].first) == 33658 && static_cast<long>(lignecourante[ 1 ].first) == 35495 ){
-                std::cerr << "In eliminate (line 184 of gauss-elim.inl" << std::endl;
-                std::cerr << tmp << std::endl;
-                std::cerr << "Next line" << std::endl;
-            }
-        }
-							
+							}
+							lignecourante[0] = tmp;
 						}
 						j_head = 0;
 					}
@@ -237,6 +189,14 @@ namespace LinBox
 
 					// A[i,k] <-- - A[i,k] / A[k,k]
 					Element headcoeff;
+                    
+                    if ( static_cast<long>(lignecourante.size()) > 0 && static_cast<long>(lignecourante[ 1 ].first) == 33658 ){
+                            std::cerr << "Tada" << std::endl;
+                            std::cerr << field().neg (headcoeff, lignecourante[(size_t)j_head].second) << std::endl;
+                            std::cerr << lignepivot[0].second << std::endl;
+                            std::cerr << "Now trying to divide..." << std::endl;
+                    }
+                    
 					field().divin (field().neg (headcoeff, lignecourante[(size_t)j_head].second),
 						  lignepivot[0].second);
 

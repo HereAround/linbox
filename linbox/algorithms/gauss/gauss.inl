@@ -636,7 +636,7 @@ namespace LinBox
                             long unsigned int Nj) const
     {
         typedef typename _Matrix::Row        Vector;
-//std::cerr << "now in InPlaceLinearPivoting" << std::endl;
+
         // Requirements : LigneA is an array of sparse rows
         // In place (LigneA is modified)
         // With reordering (D is a density type. Density is allocated here)
@@ -670,10 +670,10 @@ namespace LinBox
         long sstep = 1000;
 #endif
         // Elimination steps with reordering
-//std::cerr << "start loop until " << last << " now" << std::endl;
+
         for (long k = 0; k < last; ++k) {
             long p = k, s =(long) LigneA[(long unsigned int)k].size ();
-std::cerr << "start loop with " << k << " (until " << last << ")" << std::endl;
+
 #ifdef __LINBOX_FILLIN__
             if ( ! (k % 100) )
             {
@@ -717,7 +717,12 @@ std::cerr << "start loop with " << k << " (until " << last << ")" << std::endl;
                 }
 
                 //                     LigneA.write(std::cerr << "BEF, k:" << k << ", Rank:" << Rank << ", c:" << c)<<std::endl;
-
+                if ( k == 6256 ){
+                std::cerr << "Looking at k = " << k << std::endl;
+                std::cerr << "Matrix values = " << LigneA[(long unsigned int)k] << std::endl;
+                std::cerr << Rank << std::endl;
+                std::cerr << c << std::endl;
+                }
                 SparseFindPivot (LigneA[(long unsigned int)k], Rank, c, col_density, determinant);
                 //                     LigneA.write(std::cerr << "PIV, k:" << k << ", Rank:" << Rank << ", c:" << c)<<std::endl;
 //std::cerr << "s loop second step" << std::endl;
@@ -733,6 +738,8 @@ std::cerr << "start loop with " << k << " (until " << last << ")" << std::endl;
                     for (l = (long unsigned int)k + 1; l < (long unsigned int)Ni; ++l){
                         if ( k == 6256 && l == 22930 ) {
                         std::cerr << "eliminate l =" << l << std::endl;
+                        std::cerr << "ligne courante = " << LigneA[(long unsigned int)l] << std::endl;
+                        std::cerr << "ligne pivot = " << LigneA[(long unsigned int)k] << std::endl;
                         }
                         eliminate (LigneA[(long unsigned int)l], LigneA[(long unsigned int)k], Rank, c, col_density);
                     }
