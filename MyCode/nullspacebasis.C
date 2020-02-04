@@ -7,69 +7,27 @@
 #include "linbox/algorithms/gauss.h"
 #include <givaro/zring.h>
 #include <givaro/givrational.h>
-//#include <linbox/integer.h>
 #include <linbox/solutions/rank.h>
-
-//#include <utility>
-//#include <linbox/matrix/sparse-matrix.h>
-//#include <linbox/blackbox/zero-one.h>
-//#include <linbox/solutions/rank.h>
-//#include <linbox/util/matrix-stream.h>
 
 
 using namespace LinBox;
-
-
-// remove trailing white spaces
-std::string trim(const std::string& str)
-{
-    const auto strBegin = str.find_first_not_of(" ");
-    if (strBegin == std::string::npos)
-        return ""; // no content
-
-    const auto strEnd = str.find_last_not_of(" ");
-    const auto strRange = strEnd - strBegin + 1;
-
-    return str.substr(strBegin, strRange);
-}
-
-
-// Evaluate strings used as input
-std::vector<int> SplitString (const std::string& input_string)
-{
-    // Remove sequence of white spaces at beginning of input_string
-    std::string input = trim( input_string );
-    
-    // Split string by empty spaces
-    std::istringstream iss(input);
-    std::string s;
-    std::vector<int> data;
-    while ( std::getline( iss, s, ' ' ) ) {
-        data.push_back( std::atoi(s.c_str()) );
-    }
-    
-    // And return the result
-    return data;
-}
 
 
 int main (int argc, char **argv)
 {
     
     // We expect a matrix a matrix file in sms-format as input
-	//if ( argc !=  1 ) {
-	//	std::cerr << "Usage to get a random null space basis over Z:  <matrix-file-in-SMS-format>" << std::endl;
-	//	return -1;
-	//}
+	if ( argc !=  2 ) {
+		std::cerr << "Usage to get a random null space basis over Z:  <matrix-file-in-SMS-format>" << std::endl;
+		return -1;
+	}
     
     // (0) Introduction
     std::cerr << "" << std::endl;
     std::cerr << "This is Linbox..." << std::endl;
     
     // (1) Initialize the field of integers
-    //typedef Givaro::QField<Givaro::Rational> Field;
-    //Field F;
-    typedef Givaro::ZRing<Integer> Field;
+    typedef Givaro::ZRing<Integer> Field; // Givaro::QField<Givaro::Rational> Field; for rationals
     Field F;
     
     // (2) Read matrix
@@ -79,14 +37,9 @@ int main (int argc, char **argv)
 	B.read (input);
     std::cerr << "(*) Matrix read..." << std::endl;
     
-    std::cerr << "(*) Check content of line 6256..." << std::endl;
-    std::cerr << "Matrix values = " << B[(long unsigned int)6256] << std::endl;
-    std::cerr << "" <<std::endl;
-    
     // (3) Determine the rank of the kernel
     size_t r;
     rank (r, B );
-    //rank (r, B, Method::SparseElimination() );
     std::cerr << "(*) Kernel has dimension " << B.coldim() - r << std::endl;
     
     // (4) Compute kernel as dense matrix
@@ -94,7 +47,6 @@ int main (int argc, char **argv)
     DenseMatrix<Field> NullSpace(F,B.coldim(),B.coldim() - r);
     GaussDomain<Field> GD(F);
     GD.nullspacebasisin(NullSpace, B );
-    //GD.nullspacebasis(NullSpace, B );
     std::cerr << "(*) Exact (dense) kernel computed..." << std::endl;
     
     // (5) Process this kernel to turn it (a) into a sparse matrix and (b) see how many columns are actually non-trivial
@@ -139,11 +91,3 @@ int main (int argc, char **argv)
     return 0;
     
 }
-
-// Local Variables:
-// mode: C++
-// tab-width: 4
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// End:
-// vim:sts=4:sw=4:ts=4:et:sr:cino=>s,f0,{0,g0,(0,\:0,t0,+0,=s
