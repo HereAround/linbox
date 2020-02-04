@@ -1,8 +1,0 @@
-g++ -msse -msse2 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -mavx2 -mfma -o nullspacebasis nullspacebasis.o -L/home/i/HDD/Computer/Mathematics_software/givaro/build/lib -fopenmp -lblas -lgivaro -lgmp -lgmpxx
-
-g++ -march=native -mfma -o nullspacebasis nullspacebasis.o -L/home/i/HDD/Computer/Mathematics_software/givaro/build/lib -fopenmp -lblas -lgivaro -lgmp -lgmpxx
-
-g++ -march=native -mfma -o nullspacebasis nullspacebasis.o -L/home/i/HDD/Computer/Mathematics_software/givaro/build/lib -L/../linbox/liblinbox.la -fopenmp -lblas -lgivaro -lgmp -lgmpxx
-
-g++ -march=native -mfma -o nullspacebasis nullspacebasis.o ../linbox/.libs/liblinbox.a -L/home/i/HDD/Computer/Mathematics_software/givaro/build/lib -fopenmp -lblas -lgivaro -lgmp -lgmpxx
-
