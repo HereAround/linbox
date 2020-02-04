@@ -717,30 +717,19 @@ namespace LinBox
                 }
 
                 //                     LigneA.write(std::cerr << "BEF, k:" << k << ", Rank:" << Rank << ", c:" << c)<<std::endl;
-                if ( k == 6256 ){
-                std::cerr << "Looking at k = " << k << std::endl;
-                std::cerr << "Matrix values = " << LigneA[(long unsigned int)k] << std::endl;
-                std::cerr << Rank << std::endl;
-                std::cerr << c << std::endl;
-                }
                 SparseFindPivot (LigneA[(long unsigned int)k], Rank, c, col_density, determinant);
                 //                     LigneA.write(std::cerr << "PIV, k:" << k << ", Rank:" << Rank << ", c:" << c)<<std::endl;
-//std::cerr << "s loop second step" << std::endl;
+
                 if (c != -1) {
                     if ( c != (static_cast<long>(Rank)-1) ){
                         P.permute(Rank-1,(long unsigned int)c);
                     }
-//std::cerr << "c-case -- loop 1" << std::endl;
+
                     for (long ll=0; ll < k ; ++ll){
                         permute( LigneA[(long unsigned int)ll], Rank, c);
                     }
-//std::cerr << "c-case -- loop 2" << std::endl;
+
                     for (l = (long unsigned int)k + 1; l < (long unsigned int)Ni; ++l){
-                        if ( k == 6256 && l == 22930 ) {
-                        std::cerr << "eliminate l =" << l << std::endl;
-                        std::cerr << "ligne courante = " << LigneA[(long unsigned int)l] << std::endl;
-                        std::cerr << "ligne pivot = " << LigneA[(long unsigned int)k] << std::endl;
-                        }
                         eliminate (LigneA[(long unsigned int)l], LigneA[(long unsigned int)k], Rank, c, col_density);
                     }
                 }
@@ -752,7 +741,7 @@ namespace LinBox
             }
 
         }//for k
-std::cerr << "after loop, i.e. halfway through InPlaceLinearPivoting" << std::endl;
+
         SparseFindPivot (LigneA[(long unsigned int)last], Rank, c, determinant);
         if ( (c != -1) && (c != (static_cast<long>(Rank)-1) ) ) {
             P.permute(Rank-1,(long unsigned int)c);

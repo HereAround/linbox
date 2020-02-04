@@ -189,14 +189,6 @@ namespace LinBox
 
 					// A[i,k] <-- - A[i,k] / A[k,k]
 					Element headcoeff;
-                    
-                    if ( static_cast<long>(lignecourante.size()) > 0 && static_cast<long>(lignecourante[ 1 ].first) == 33658 ){
-                            std::cerr << "Tada" << std::endl;
-                            std::cerr << field().neg (headcoeff, lignecourante[(size_t)j_head].second) << std::endl;
-                            std::cerr << lignepivot[0].second << std::endl;
-                            std::cerr << "Now trying to divide..." << std::endl;
-                    }
-                    
 					field().divin (field().neg (headcoeff, lignecourante[(size_t)j_head].second),
 						  lignepivot[0].second);
 

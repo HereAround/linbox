@@ -108,7 +108,6 @@ namespace LinBox
 		// A.write( std::cerr << "A:=", Tag::FileFormat::Maple ) << ';' << std::endl;
 		this->InPlaceLinearPivoting(Rank, Det, A, P, Ni, Nj );
 
-        std::cerr << "And now here" << std::endl;
 		// P.write( std::cerr << "P:=", Tag::FileFormat::Maple ) << ';' << std::endl;
 		// A.write( std::cerr << "Ua:=", Tag::FileFormat::Maple ) << ';' << std::endl;
 
