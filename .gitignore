@@ -38,3 +38,4 @@ macros/lt~obsolete.m4
 # @todo Don't know why that is here
 tests/.tmp-tests
 tests/checker.dSYM/
+build/
